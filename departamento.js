@@ -12,9 +12,55 @@ data-bs-target="#exampleModal"
     <thead>
         <tr>
             <th>
+                <div class="d-flex flex-row">
+
+                <input class="form-control m-2>
+                    v-model="DepartamentoIDFilter"
+                    v-on:keyup="FilterFn()"
+                    placeholder="Filter">
+
+                    <button type="button" class="btn btn=light"
+                    @click="sortResult('DepartmentoID', true)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-circle-fill" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
+                    </svg>
+                    </button>
+
+
+                    <button type="button" class="btn btn=light"
+                    @click="sortResult('DepartmentoID', false)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-circle-fill" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
+                    </svg>
+                    </button>
+                </div>
+
                 DepartamentoID
             </th>
             <th>
+            <div class="d-flex flex-row">
+
+            <input class="form-control m-2>
+                v-model="DepartamentoNomeFilter"
+                v-on:keyup="FilterFn()"
+                placeholder="Filter">
+
+                <button type="button" class="btn btn=light"
+                @click="sortResult('DepartmentoNome', true)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
+                </svg>
+                </button>
+
+
+                <button type="button" class="btn btn=light"
+                @click="sortResult('DepartmentoNome', false)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
+                </svg>
+                </button>
+
+            </div>
                 DepartamentoNome
             </th>
             <th>
@@ -87,7 +133,10 @@ data-bs-target="#exampleModal"
             departamentos:[],
             modalTitle:"",
             DepartamentoNome:"",
-            DepartamentoId:0
+            DepartamentoId:0,
+            DepartamentoNomeFilter:"",
+            DepartamentoIdFilter:"",
+            departamentosWithoutFilter:[]
         }
     },
     methods: {
@@ -95,6 +144,7 @@ data-bs-target="#exampleModal"
             axios.get(variaveis.API_URL+"departamento")
             .then((response)=>{
                 this.departamentos=response.data;
+                this.departamentosWithoutFilter=response.data;
             });
         },
         addClick(){
@@ -135,6 +185,29 @@ data-bs-target="#exampleModal"
             .then((response)=>{
                 this.departamentos=response.data;
             });
+        },
+        FilterFn(){
+            var DepartamentoIdFilter = this.DepartamentoIdFilter;
+            var DepartamentoNomeFilter = this.DepartamentoNomeFilter;
+
+            this.departamentos = this.departamentosWithoutFilter.filter(
+                function(el){
+                    return el.DepartamentoId.toString().ToLowerCase().includes(DepartamentoIdFilter.toString().trim().ToLowerCase()
+                    )&&
+                    el.DepartamentoNome.toString().ToLowerCase().includes(DepartamentoNomeFilter.toString().trim().ToLowerCase()
+                    )
+                });
+        },
+
+        sortResult(prop, asc){
+            this.departamentos=this.departamentosWithoutFilter.sort(function(a,b){
+                if(asc){
+                    return (a[prop]>b[prop]) ? 1 : ((a[prop]<b[prop]) ? -1 : 0);
+                }
+                else{
+                    return (b[prop]>a[prop]) ? 1 : ((b[prop]<a[prop]) ? -1 : 0);
+                }
+            })
         }
 
 

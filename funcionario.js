@@ -126,7 +126,7 @@ data-bs-target="#exampleModal"
             Departamento:"",
             DateOfJoining: "",
             PhotoFileName:"dino.png",
-            PhotoPath=variaveis.PHOTO_URL,
+            PhotoPath:variaveis.PHOTO_URL,
         }
     },
     methods: {
@@ -162,7 +162,7 @@ data-bs-target="#exampleModal"
                 FuncionarioNome:this.FuncionarioNome,
                 Departamento:this.Departamento,
                 DateOfJoining:this.DateOfJoining,
-                PhotoFileName::this.PhotoFileName
+                PhotoFileName:this.PhotoFileName
             })
             .then((response)=>{
                 this.refreData();
@@ -175,7 +175,7 @@ data-bs-target="#exampleModal"
                 FuncionarioNome:this.FuncionarioNome,
                 Departamento:this.Departamento,
                 DateOfJoining:this.DateOfJoining,
-                PhotoFileName::this.PhotoFileName
+                PhotoFileName:this.PhotoFileName
             })
             .then((response)=>{
                 this.refreData();
@@ -191,8 +191,17 @@ data-bs-target="#exampleModal"
             .then((response)=>{
                 this.funcionarios=response.data;
             });
+        },
+        imageUpload(event){
+            let formData=new FormData();
+            formData.append('file',event.target.files[0]);
+            axios.post(
+                variables.API_URL+"funcionario/savefile",
+                formData)
+                .then((response)=>{
+                    this.PhotoFileName=response.data;
+                });
         }
-
 
     },
     mouted:function(){
